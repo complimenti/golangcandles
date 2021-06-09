@@ -39,12 +39,12 @@ import (
 )
 
 func main() {
-	df := dataframe.New(
-		series.New([]float64{90, 125, 110}, series.Float, "Open"),
-		series.New([]float64{105, 135, 115}, series.Float, "High"),
-		series.New([]float64{100, 130, 95}, series.Float, "Close"),
-		series.New([]float64{85, 120, 92}, series.Float, "Low"),
-	)
+  df := dataframe.New(
+    series.New([]float64{90, 125, 110}, series.Float, "Open"),
+    series.New([]float64{105, 135, 115}, series.Float, "High"),
+    series.New([]float64{100, 130, 95}, series.Float, "Close"),
+    series.New([]float64{85, 120, 92}, series.Float, "Low"),
+  )
   result := AbandonedBaby(df)
   fmt.Println(result)
 }
