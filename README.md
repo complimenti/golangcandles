@@ -35,7 +35,7 @@ import (
   "fmt"
   "github.com/go-gota/gota/dataframe"
   "github.com/go-gota/gota/series"
-  "github.com/complimenti/golangcandles"
+  golangcandles "github.com/complimenti/golangcandles"
 )
 
 func main() {
@@ -45,7 +45,7 @@ func main() {
     series.New([]float64{100, 130, 95}, series.Float, "Close"),
     series.New([]float64{85, 120, 92}, series.Float, "Low"),
   )
-  result := AbandonedBaby(df)
+  result := golangcandles.AbandonedBaby(df)
   fmt.Println(result)
 }
 ```
