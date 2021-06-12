@@ -66,10 +66,10 @@ import (
 )
 
 var dbURI = `
-user=YOURUSER 
-password=YOURPASSWORD
-dbname=YOURDB
-host=YOURHOST`
+    user=YOURUSER 
+    password=YOURPASSWORD
+    dbname=YOURDB
+    host=YOURHOST`
 
 func main() {
 
@@ -110,8 +110,8 @@ func main() {
     	   series.New(low, series.Float, "Low"),
     )
     result := golangcandles.AbandonedBaby(df)
-        fmt.Println(result)
-    }
+    fmt.Println(result)
+}
 ```
 
 ## TEST
