@@ -1,32 +1,32 @@
-# GOLANGCANDLES
+# GolangCandles
 
 The simplest candles pattern recognition library written purely in Golang.
 
-## DISCLAIMER
+## Disclaimer
 
-This library has been developed by highly unexperienced traders, and it contains bugs.
+This library has been developed by highly unexperienced traders, it might contain bugs, use it at your own risk.
 
-Moreover it is code full of if-else statements.
-
-On the other hand, it is extremely fast and easy to understand.
-
-Any function is tested in both bull/bear cases.
+As strenght it is extremely fast and easy to understand.
 
 Any support is more than welcome!
 
-## USAGE
+## Dependencies
 
 This library uses golang dataframe coming from [gota](https://github.com/go-gota/gota).
 
-The goal is to pass a dataframe containing OHLC data, getting as return wheater a bullish or bearish pattern is identified:
+## Use
+
+Pass a dataframe containing OHLC data and get as return wheater a bullish or bearish pattern is identified:
 
 - 100: BULL
 - -100: BEAR
 - 0: NULL
 
-Please note, the library identifies pattern only about the last element of the dataframe and not the previous one!
+**Please note, the library identifies pattern only about the last element of the dataframe and not the previous one!**
 
-### EXAMPLE
+## Examples
+
+#### Simple script
 
 ```golang
 package main
@@ -48,6 +48,70 @@ func main() {
   result := golangcandles.AbandonedBaby(df)
   fmt.Println(result)
 }
+```
+
+#### Integrate with Postgresql
+```golang
+package main
+
+import (
+    "database/sql"
+    "fmt"
+    "golangcandles"
+    
+    "github.com/go-gota/gota/dataframe"
+    "github.com/go-gota/gota/series"
+    "github.com/lib/pq"
+    _ "github.com/lib/pq"
+)
+
+var dbURI = `
+user=YOURUSER 
+password=YOURPASSWORD
+dbname=YOURDB
+host=YOURHOST`
+
+func main() {
+
+    // INITIALIZE DB
+    db, err := sql.Open("postgres", dbURI)
+    defer db.Close()
+    if err != nil {
+    	fmt.Println(err)
+    }
+
+    var open, close, high, low []float64
+
+    query := `
+    	SELECT
+    		ARRAY_AGG(open),
+    		ARRAY_AGG(close),
+    		ARRAY_AGG(high),
+    		ARRAY_AGG(low)
+    	FROM ohlc
+    	WHERE exchange = 'binance'
+    	AND symbol = 'ETHBTC'
+    	AND createdat > (current_timestamp - interval '10 day');`
+
+    err = db.QueryRow(query).Scan(
+    	   pq.Array(&open),
+    	   pq.Array(&close),
+    	   pq.Array(&high),
+    	   pq.Array(&low),
+    )
+    if err != nil {
+    	   fmt.Println(err)
+    }
+    
+    df := dataframe.New(
+    	   series.New(open, series.Float, "Open"),
+    	   series.New(close, series.Float, "Close"),
+    	   series.New(high, series.Float, "High"),
+    	   series.New(low, series.Float, "Low"),
+    )
+    result := golangcandles.AbandonedBaby(df)
+        fmt.Println(result)
+    }
 ```
 
 ## TEST
